@@ -1,41 +1,59 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
-import Recipes from "./components/Recipes";
-import SearchBar from "./components/SearchBar";
+import Header from "./components/Header";
+import Main from "./components/Main";
 
 import axios from "axios";
+import { Route, Routes } from "react-router-dom";
 
-function App() {
-  const [state, setState] = useState({
-    term: "all",
-    recipes: []
+export default function App() {
+  const [store, setStore] = useState({
+    recipes: {
+      term: "all",
+      recipes: []
+    }
   });
 
-  const handleState = (term) => {
-    console.log("handle state");
-    const newState = { ...state, term };
-    console.log(newState);
-    setState(newState);
+  const buildNewState = (propToModify, value) => {
+    return {
+      ...store,
+      recipes: {
+        ...store.recipes,
+        [propToModify]: value
+      }
+    };
   };
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${state.term}`;
+    async function fetchRecipes() {
+      const url = `https://themealdb.com/api/json/v1/1/search.php?s=${store.recipes.term}`;
 
-      const { data } = await axios(url);
+      const {
+        data: { meals: recipes }
+      } = await axios(url);
 
-      setState({ ...state, recipes: data.meals });
-    };
+      const newState = buildNewState("recipes", recipes);
+
+      setStore(newState);
+    }
 
     fetchRecipes();
-  }, [state.term]);
+  }, []);
+
+  const handleChange = (term) => {
+    const newState = buildNewState("term", term);
+
+    setStore(newState);
+  };
 
   return (
-    <div className="App">
-      <SearchBar term={state.term} onChange={handleState} />
-      <Recipes recipes={state.recipes} />
+    <div style={{ height: "100vh" }}>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route
+          path="/header"
+          element={<Header onChange={handleChange} term={store.recipes.term} />}
+        />
+      </Routes>
     </div>
   );
 }
-
-export default App;

@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Recipe({ recipe }) {
-  return <article>{recipe.strMeal}</article>;
+export default function Recipe() {
+  return <div>Je suis une recette</div>;
 }
