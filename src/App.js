@@ -8,10 +8,12 @@ import { Route, Routes } from "react-router-dom";
 export default function App() {
   const [store, setStore] = useState({
     recipes: {
-      term: "all",
+      term: "",
       recipes: []
     }
   });
+
+  const { recipes: myRecipes, term } = store.recipes;
 
   const buildNewState = (propToModify, value) => {
     return {
@@ -25,19 +27,25 @@ export default function App() {
 
   useEffect(() => {
     async function fetchRecipes() {
-      const url = `https://themealdb.com/api/json/v1/1/search.php?s=${store.recipes.term}`;
+      const url = `https://themealdb.com/api/json/v1/1/search.php?s=${
+        store.recipes.term || "all"
+      }`;
 
-      const {
-        data: { meals: recipes }
-      } = await axios(url);
+      console.log(url);
 
-      const newState = buildNewState("recipes", recipes);
+      if (term.length >= 3 || !store.recipes.term.length) {
+        const {
+          data: { meals: recipes }
+        } = await axios(url);
 
-      setStore(newState);
+        const newState = buildNewState("recipes", recipes);
+
+        setStore(newState);
+      }
     }
 
     fetchRecipes();
-  }, []);
+  }, [term]);
 
   const handleChange = (term) => {
     const newState = buildNewState("term", term);
@@ -47,8 +55,8 @@ export default function App() {
 
   return (
     <div style={{ height: "100vh" }}>
-      <Header onChange={handleChange} term={store.recipes.term} />
-      <Main />
+      <Header onChange={handleChange} term={term} />
+      <Main recipes={myRecipes} />
     </div>
   );
 }
