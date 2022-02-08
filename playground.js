@@ -34,6 +34,16 @@ const promise1 = makePromise1();
 const promise2 = makePromise2();
 const promise3 = makePromise3();
 
+// console.log(promise1);
+// console.log(promise2);
+// console.log(promise3);
+
 Promise.all([promise1, promise2, promise3]).then((result) =>
   console.log(result)
 );
+
+// transferts
+
+// 6 mekkah - 6 medine
+
+// Validation par transfert / Validation pour tous les transferts - validaton = push

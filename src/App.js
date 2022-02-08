@@ -47,13 +47,8 @@ export default function App() {
 
   return (
     <div style={{ height: "100vh" }}>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route
-          path="/header"
-          element={<Header onChange={handleChange} term={store.recipes.term} />}
-        />
-      </Routes>
+      <Header onChange={handleChange} term={store.recipes.term} />
+      <Main />
     </div>
   );
 }
