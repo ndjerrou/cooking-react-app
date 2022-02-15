@@ -4,6 +4,7 @@ import Main from "./components/Main";
 
 import axios from "axios";
 import { Route, Routes } from "react-router-dom";
+import Recipe from "./components/Recipe";
 
 export default function App() {
   const [store, setStore] = useState({
@@ -12,6 +13,37 @@ export default function App() {
       recipes: []
     }
   });
+
+  const [favourites, setFavourites] = useState([]);
+
+  const handleFavourites = (id) => {
+    // handle the heart's state management
+
+    // si l'id est déjà favori ?
+    if (isFavourite(id)) {
+      removeFavourite(id);
+    }
+    // si l'id n'est pas favori
+    else {
+      addFavourite(id);
+    }
+  };
+
+  console.log("Mes favoris : ", favourites);
+
+  const isFavourite = (id) => {
+    return favourites.some((el) => el === id);
+  };
+
+  const addFavourite = (id) => {
+    setFavourites((prevState) => [...prevState, id]);
+  };
+
+  const removeFavourite = (id) => {
+    setFavourites((prevState) => {
+      return prevState.filter((el) => el !== id);
+    });
+  };
 
   const { recipes: myRecipes, term } = store.recipes;
 
@@ -30,8 +62,6 @@ export default function App() {
       const url = `https://themealdb.com/api/json/v1/1/search.php?s=${
         store.recipes.term || "all"
       }`;
-
-      console.log(url);
 
       if (term.length >= 3 || !store.recipes.term.length) {
         const {
@@ -55,8 +85,21 @@ export default function App() {
 
   return (
     <div style={{ height: "100vh" }}>
-      <Header onChange={handleChange} term={term} />
-      <Main recipes={myRecipes} />
+      <Header term={term} onChange={handleChange} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Main
+              recipes={myRecipes}
+              favourites={favourites}
+              onFavourites={handleFavourites}
+            />
+          }
+        >
+          <Route path="recipe/:id" element={<Recipe />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
