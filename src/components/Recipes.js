@@ -1,12 +1,14 @@
 import React from "react";
 import CardRecipe from "./CardRecipe";
 
-export default function Recipes({ recipes, favourites, onFavourites }) {
+export default function Recipes({ filter, recipes, favourites, onFavourites }) {
   const amIFavourite = (id) => {
-    console.log(id);
-    console.log(favourites);
     return favourites.includes(id);
   };
+
+  const filteredRecipes = recipes.filter(recipe=>recipe.strCategory.toLowerCase() === filter.toLowerCase())
+
+  recipes = filter === 'All' ? recipes : filteredRecipes
 
   return (
     <section>

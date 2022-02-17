@@ -13,8 +13,17 @@ export default function App() {
       recipes: []
     }
   });
+  
+
 
   const [favourites, setFavourites] = useState([]);
+
+  const [filter, setFilter] = useState('All')
+
+
+  const onFilterTerm = (filter)=>{
+    setFilter(filter)  
+  }
 
   const handleFavourites = (id) => {
     // handle the heart's state management
@@ -29,7 +38,6 @@ export default function App() {
     }
   };
 
-  console.log("Mes favoris : ", favourites);
 
   const isFavourite = (id) => {
     return favourites.some((el) => el === id);
@@ -94,6 +102,8 @@ export default function App() {
               recipes={myRecipes}
               favourites={favourites}
               onFavourites={handleFavourites}
+              onFilterTerm={onFilterTerm}
+              filter={filter}
             />
           }
         >

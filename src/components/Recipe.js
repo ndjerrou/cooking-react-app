@@ -10,7 +10,6 @@ export default function Recipe() {
       .then((res) => res.json())
       .then(({ meals }) => setRecipe(meals[0].strMeal));
   });
-  console.log(recipe);
   return (
     <>
       <article>Recette : {recipe}</article>
